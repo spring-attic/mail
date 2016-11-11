@@ -22,6 +22,7 @@ import javax.mail.URLName;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.integration.mail.AbstractMailReceiver;
 
 /**
  * Configuration properties for the Mail Source module.
@@ -68,6 +69,11 @@ public class MailSourceProperties {
 	 * The charset for byte[] mail-to-string transformation.
 	 */
 	private String charset = "UTF-8";
+
+	/**
+	 * The flag to mark messages when the server does not support \Recent
+	 */
+	private String userFlag = AbstractMailReceiver.DEFAULT_SI_USER_FLAG;
 
 	/**
 	 * @return the markAsRead
@@ -165,4 +171,12 @@ public class MailSourceProperties {
 		this.charset = charset;
 	}
 
+	@NotNull
+	public String getUserFlag() {
+		return this.userFlag;
+	}
+
+	public void setUserFlag(String userFlag) {
+		this.userFlag = userFlag;
+	}
 }

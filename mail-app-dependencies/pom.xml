@@ -14,6 +14,11 @@
         <version>1.1.1.RELEASE</version>
     </parent>
 
+    <properties>
+        <spring-integration.version>4.3.6.BUILD-SNAPSHOT</spring-integration.version>
+        <spring-integration-java-dsl.version>1.2.1.RELEASE</spring-integration-java-dsl.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

@@ -21,7 +21,6 @@ import java.util.Properties;
 import javax.mail.URLName;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.app.trigger.TriggerConfiguration;
@@ -32,12 +31,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlowBuilder;
 import org.springframework.integration.dsl.IntegrationFlows;
-import org.springframework.integration.dsl.SourcePollingChannelAdapterSpec;
 import org.springframework.integration.dsl.mail.Mail;
 import org.springframework.integration.dsl.mail.MailInboundChannelAdapterSpec;
-import org.springframework.integration.dsl.support.Consumer;
 import org.springframework.integration.dsl.support.Transformers;
-import org.springframework.integration.scheduling.PollerMetadata;
 
 /**
  * A source module that listens for mail and emits the content as a message payload.
@@ -49,10 +45,6 @@ import org.springframework.integration.scheduling.PollerMetadata;
 @EnableConfigurationProperties({ MailSourceProperties.class, TriggerPropertiesMaxMessagesDefaultOne.class })
 @Import({ TriggerConfiguration.class })
 public class MailSourceConfiguration {
-
-	@Autowired
-	@Qualifier("defaultPoller")
-	private PollerMetadata defaultPoller;
 
 	@Autowired
 	private MailSourceProperties properties;
@@ -80,7 +72,6 @@ public class MailSourceConfiguration {
 			flowBuilder = getIdleImapFlow(urlName);
 		}
 		else {
-
 			MailInboundChannelAdapterSpec adapterSpec;
 			switch (urlName.getProtocol().toUpperCase()) {
 				case "IMAP":
@@ -97,17 +88,9 @@ public class MailSourceConfiguration {
 			}
 			flowBuilder = IntegrationFlows.from(
 					adapterSpec.javaMailProperties(getJavaMailProperties(urlName))
+							.userFlag(this.properties.getUserFlag())
 							.selectorExpression(this.properties.getExpression())
-							.shouldDeleteMessages(this.properties.isDelete()),
-					new Consumer<SourcePollingChannelAdapterSpec>() {
-
-						@Override
-						public void accept(
-								SourcePollingChannelAdapterSpec sourcePollingChannelAdapterSpec) {
-							sourcePollingChannelAdapterSpec.poller(MailSourceConfiguration.this.defaultPoller);
-						}
-
-					});
+							.shouldDeleteMessages(this.properties.isDelete()));
 
 		}
 		return flowBuilder;
@@ -121,6 +104,7 @@ public class MailSourceConfiguration {
 	private IntegrationFlowBuilder getIdleImapFlow(URLName urlName) {
 		return IntegrationFlows.from(Mail.imapIdleAdapter(urlName.toString())
 				.shouldDeleteMessages(this.properties.isDelete())
+				.userFlag(this.properties.getUserFlag())
 				.javaMailProperties(getJavaMailProperties(urlName))
 				.selectorExpression(this.properties.getExpression())
 				.shouldMarkMessagesAsRead(this.properties.isMarkAsRead()));

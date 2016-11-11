@@ -15,7 +15,6 @@
 	<modules>
 		<module>spring-cloud-starter-stream-source-mail</module>
 		<module>mail-app-dependencies</module>
-		<module>mail-app-starters-test-support</module>
 	</modules>
 
 	<dependencyManagement>
