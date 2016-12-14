@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mail-app-dependencies</artifactId>
-    <version>1.1.1.RELEASE</version>
+    <version>1.1.2.BUILD-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>mail-app-dependencies</name>
     <description>Spring Cloud Stream Time App Dependencies</description>
@@ -19,12 +19,12 @@
             <dependency>
                 <groupId>org.springframework.cloud.stream.app</groupId>
                 <artifactId>spring-cloud-starter-stream-source-mail</artifactId>
-                <version>1.1.1.RELEASE</version>
+                <version>1.1.2.BUILD-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud.stream.app</groupId>
                 <artifactId>mail-app-starters-test-support</artifactId>
-                <version>1.1.1.RELEASE</version>
+                <version>1.1.2.BUILD-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
