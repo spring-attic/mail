@@ -34,10 +34,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.cloud.stream.app.test.mail.PoorMansMailServer;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.integration.mail.transformer.MailToStringTransformer;
+import org.springframework.integration.test.mail.TestMailServer;
 import org.springframework.integration.test.util.TestUtils;
 import org.springframework.messaging.Message;
 import org.springframework.test.annotation.DirtiesContext;
@@ -53,7 +53,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MailSourceConfigurationTests.MailSourceApplication.class)
 @DirtiesContext
-@TestPropertySource(properties = { "mail.mark-as-read=true", "mail.delete=false",
+@TestPropertySource(properties = { "mail.mark-as-read=true", "mail.delete=false", "mail.user-flag=testSIUserFlag",
 		"mail.java-mail-properties=mail.imap.socketFactory.fallback=true\\n mail.store.protocol=imap\\n mail.debug=true" })
 public abstract class MailSourceConfigurationTests {
 
@@ -69,15 +69,15 @@ public abstract class MailSourceConfigurationTests {
 	@Autowired
 	protected BeanFactory beanFactory;
 
-	private static PoorMansMailServer.MailServer MAIL_SERVER;
+	private static TestMailServer.MailServer MAIL_SERVER;
 
-	protected static void startMailServer(PoorMansMailServer.MailServer mailServer)
+	protected static void startMailServer(TestMailServer.MailServer mailServer)
 			throws InterruptedException {
 		MAIL_SERVER = mailServer;
 		System.setProperty("test.mail.server.port", "" + MAIL_SERVER.getPort());
 		int n = 0;
 		while (n++ < 100 && (!MAIL_SERVER.isListening())) {
-			Thread.sleep(10);
+			Thread.sleep(100);
 		}
 		assertTrue(n < 100);
 	}
@@ -93,7 +93,7 @@ public abstract class MailSourceConfigurationTests {
 
 		@BeforeClass
 		public static void startImapServer() throws Throwable {
-			startMailServer(PoorMansMailServer.imap(0));
+			startMailServer(TestMailServer.imap(0));
 		}
 
 		@Test
@@ -102,17 +102,17 @@ public abstract class MailSourceConfigurationTests {
 			Message<?> received = this.messageCollector.forChannel(source.output()).poll(10, TimeUnit.SECONDS);
 			assertNotNull(received);
 			assertThat(received.getPayload(), Matchers.instanceOf(String.class));
-			assertEquals("foo\r\n", received.getPayload());
+			assertEquals("foo\r\n\r\n", received.getPayload());
 		}
 
 	}
 
-	@IntegrationTest({ "mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX", "mail.charset=cp1251"})
+	@IntegrationTest({ "mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX", "mail.charset=cp1251" })
 	public static class ImapFailTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
 		public static void startImapServer() throws Throwable {
-			startMailServer(PoorMansMailServer.imap(0));
+			startMailServer(TestMailServer.imap(0));
 		}
 
 		@Test
@@ -133,8 +133,8 @@ public abstract class MailSourceConfigurationTests {
 	public static class Pop3PassTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
-		public static void startImapServer() throws Throwable {
-			startMailServer(PoorMansMailServer.pop3(0));
+		public static void startPop3Server() throws Throwable {
+			startMailServer(TestMailServer.pop3(0));
 		}
 
 		@Test
@@ -143,7 +143,7 @@ public abstract class MailSourceConfigurationTests {
 			Message<?> received = this.messageCollector.forChannel(source.output()).poll(10, TimeUnit.SECONDS);
 			assertNotNull(received);
 			assertThat(received.getPayload(), Matchers.instanceOf(String.class));
-			assertEquals("foo\r\n", received.getPayload());
+			assertEquals("foo\r\n\r\n", received.getPayload());
 		}
 
 	}
@@ -152,8 +152,8 @@ public abstract class MailSourceConfigurationTests {
 	public static class Pop3FailTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
-		public static void startImapServer() throws Throwable {
-			startMailServer(PoorMansMailServer.pop3(0));
+		public static void startPop3Server() throws Throwable {
+			startMailServer(TestMailServer.pop3(0));
 		}
 
 		@Test
@@ -172,7 +172,7 @@ public abstract class MailSourceConfigurationTests {
 
 		@BeforeClass
 		public static void startImapServer() throws Throwable {
-			startMailServer(PoorMansMailServer.imap(0));
+			startMailServer(TestMailServer.imap(0));
 		}
 
 		@Test
@@ -181,7 +181,7 @@ public abstract class MailSourceConfigurationTests {
 			Message<?> received = this.messageCollector.forChannel(source.output()).poll(10, TimeUnit.SECONDS);
 			assertNotNull(received);
 			assertThat(received.getPayload(), Matchers.instanceOf(String.class));
-			assertEquals("foo\r\n", received.getPayload());
+			assertEquals("foo\r\n\r\n", received.getPayload());
 		}
 
 	}
@@ -191,7 +191,7 @@ public abstract class MailSourceConfigurationTests {
 
 		@BeforeClass
 		public static void startImapServer() throws Throwable {
-			startMailServer(PoorMansMailServer.imap(0));
+			startMailServer(TestMailServer.imap(0));
 		}
 
 		@Test

@@ -14,18 +14,17 @@
         <version>1.1.1.RELEASE</version>
     </parent>
 
+    <properties>
+        <spring-integration.version>4.3.6.RELEASE</spring-integration.version>
+        <spring-integration-java-dsl.version>1.2.1.RELEASE</spring-integration-java-dsl.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud.stream.app</groupId>
                 <artifactId>spring-cloud-starter-stream-source-mail</artifactId>
                 <version>1.1.2.BUILD-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud.stream.app</groupId>
-                <artifactId>mail-app-starters-test-support</artifactId>
-                <version>1.1.2.BUILD-SNAPSHOT</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
