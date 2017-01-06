@@ -41,7 +41,7 @@
 			</dependency>
         </dependencies>
     </dependencyManagement>
-<profiles>
+	<profiles>
 		<profile>
 			<id>spring</id>
 			<repositories>
