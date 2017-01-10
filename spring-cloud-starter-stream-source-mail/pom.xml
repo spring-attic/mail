@@ -13,10 +13,6 @@
 		<version>1.1.2.BUILD-SNAPSHOT</version>
 	</parent>
 
-	<properties>
-		<spring-integration-java-dsl.version>1.2.1.RELEASE</spring-integration-java-dsl.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.integration</groupId>
@@ -72,15 +68,7 @@
 					</bom>
 
 					<generatedApps>
-						<mail-source>
-							<forceDependencies>
-								<dependency>
-									<groupId>org.springframework.integration</groupId>
-									<artifactId>spring-integration-java-dsl</artifactId>
-									<version>${spring-integration-java-dsl.version}</version>
-								</dependency>
-							</forceDependencies>
-						</mail-source>
+						<mail-source/>
 					</generatedApps>
 				</configuration>
 			</plugin>

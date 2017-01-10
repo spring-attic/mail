@@ -17,11 +17,6 @@
 		<module>mail-app-dependencies</module>
 	</modules>
 
-	<properties>
-		<spring-integration.version>4.3.6.RELEASE</spring-integration.version>
-		<spring-integration-java-dsl.version>1.2.1.RELEASE</spring-integration-java-dsl.version>
-	</properties>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -33,7 +28,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-<profiles>
+	<profiles>
 		<profile>
 			<id>spring</id>
 			<repositories>
