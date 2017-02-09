@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.integration.mail.transformer.MailToStringTransformer;
@@ -42,7 +41,7 @@ import org.springframework.integration.test.util.TestUtils;
 import org.springframework.messaging.Message;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Tests for Mail Source Configuration.
@@ -50,11 +49,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Amol
  * @author Artem Bilan
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MailSourceConfigurationTests.MailSourceApplication.class)
+@RunWith(SpringRunner.class)
 @DirtiesContext
-@TestPropertySource(properties = { "mail.mark-as-read=true", "mail.delete=false", "mail.user-flag=testSIUserFlag",
-		"mail.java-mail-properties=mail.imap.socketFactory.fallback=true\\n mail.store.protocol=imap\\n mail.debug=true" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
+		properties = {
+				"mail.mark-as-read=true",
+				"mail.delete=false",
+				"mail.user-flag=testSIUserFlag",
+				"mail.java-mail-properties=mail.imap.socketFactory.fallback=true\\n mail.store.protocol=imap\\n mail.debug=true" })
 public abstract class MailSourceConfigurationTests {
 
 	@Autowired
@@ -88,7 +90,7 @@ public abstract class MailSourceConfigurationTests {
 		MAIL_SERVER.stop();
 	}
 
-	@IntegrationTest({ "mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX" })
+	@TestPropertySource(properties = "mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX")
 	public static class ImapPassTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
@@ -107,7 +109,9 @@ public abstract class MailSourceConfigurationTests {
 
 	}
 
-	@IntegrationTest({ "mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX", "mail.charset=cp1251" })
+	@TestPropertySource(properties = {
+			"mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX",
+			"mail.charset=cp1251" })
 	public static class ImapFailTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
@@ -129,7 +133,7 @@ public abstract class MailSourceConfigurationTests {
 
 	}
 
-	@IntegrationTest({ "mail.url=pop3://user:pw@localhost:${test.mail.server.port}/INBOX" })
+	@TestPropertySource(properties = "mail.url=pop3://user:pw@localhost:${test.mail.server.port}/INBOX")
 	public static class Pop3PassTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
@@ -148,7 +152,7 @@ public abstract class MailSourceConfigurationTests {
 
 	}
 
-	@IntegrationTest({ "mail.url=pop3://user:pw@localhost:${test.mail.server.port}/INBOX" })
+	@TestPropertySource(properties = "mail.url=pop3://user:pw@localhost:${test.mail.server.port}/INBOX")
 	public static class Pop3FailTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
@@ -167,7 +171,9 @@ public abstract class MailSourceConfigurationTests {
 
 	}
 
-	@IntegrationTest({ "mail.idle-imap=true", "mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX" })
+	@TestPropertySource(properties = {
+			"mail.idle-imap=true",
+			"mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX" })
 	public static class ImapIdlePassTests extends MailSourceConfigurationTests {
 
 		@BeforeClass
@@ -186,7 +192,9 @@ public abstract class MailSourceConfigurationTests {
 
 	}
 
-	@IntegrationTest({ "mail.idle-imap=true", "mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX" })
+	@TestPropertySource(properties = {
+			"mail.idle-imap=true",
+			"mail.url=imap://user:pw@localhost:${test.mail.server.port}/INBOX" })
 	public static class ImapIdleFailTests extends MailSourceConfigurationTests {
 
 		@BeforeClass

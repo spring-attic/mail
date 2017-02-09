@@ -1,46 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.cloud.stream.app</groupId>
-    <artifactId>mail-app-dependencies</artifactId>
-    <version>1.1.2.BUILD-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>mail-app-dependencies</name>
-    <description>Spring Cloud Stream Mail App Dependencies</description>
+	<artifactId>mail-app-dependencies</artifactId>
+	<version>1.1.2.BUILD-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>mail-app-dependencies</name>
+	<description>Spring Cloud Stream Mail App Dependencies</description>
 
-    <parent>
+	<parent>
 		<artifactId>spring-cloud-dependencies-parent</artifactId>
 		<groupId>org.springframework.cloud</groupId>
 		<version>1.2.1.RELEASE</version>
-		<relativePath />
-    </parent>
+		<relativePath/>
+	</parent>
 
-    <properties>
-        <spring-integration.version>4.3.6.RELEASE</spring-integration.version>
-        <spring-integration-java-dsl.version>1.2.1.RELEASE</spring-integration-java-dsl.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-			<dependency>
-				<groupId>org.springframework.integration</groupId>
-				<artifactId>spring-integration-bom</artifactId>
-				<version>${spring-integration.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.integration</groupId>
-				<artifactId>spring-integration-java-dsl</artifactId>
-				<version>${spring-integration-java-dsl.version}</version>
-			</dependency>
+	<dependencyManagement>
+		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud.stream.app</groupId>
 				<artifactId>spring-cloud-starter-stream-source-mail</artifactId>
 				<version>1.1.2.BUILD-SNAPSHOT</version>
 			</dependency>
-        </dependencies>
-    </dependencyManagement>
+		</dependencies>
+	</dependencyManagement>
+
 	<profiles>
 		<profile>
 			<id>spring</id>
