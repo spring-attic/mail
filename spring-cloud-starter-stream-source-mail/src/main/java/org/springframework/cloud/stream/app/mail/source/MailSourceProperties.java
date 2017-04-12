@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.integration.mail.AbstractMailReceiver;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Configuration properties for the Mail Source module.
@@ -31,6 +32,7 @@ import org.springframework.integration.mail.AbstractMailReceiver;
  * @author Artem Bilan
  */
 @ConfigurationProperties("mail")
+@Validated
 public class MailSourceProperties {
 
 	/**
