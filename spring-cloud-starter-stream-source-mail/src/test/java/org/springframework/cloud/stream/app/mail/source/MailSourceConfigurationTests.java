@@ -16,11 +16,14 @@
 
 package org.springframework.cloud.stream.app.mail.source;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.hamcrest.Matchers;
@@ -35,10 +38,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
+import org.springframework.integration.mail.MailHeaders;
 import org.springframework.integration.mail.transformer.MailToStringTransformer;
 import org.springframework.integration.test.mail.TestMailServer;
 import org.springframework.integration.test.util.TestUtils;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -103,8 +108,15 @@ public abstract class MailSourceConfigurationTests {
 
 			Message<?> received = this.messageCollector.forChannel(source.output()).poll(10, TimeUnit.SECONDS);
 			assertNotNull(received);
-			assertThat(received.getPayload(), Matchers.instanceOf(String.class));
+			assertThat(received.getPayload(), instanceOf(String.class));
 			assertEquals("foo\r\n\r\n", received.getPayload());
+			MessageHeaders headers = received.getHeaders();
+			assertThat(headers.get(MailHeaders.TO), instanceOf(List.class));
+			assertThat(headers.get(MailHeaders.CC), instanceOf(List.class));
+			assertThat(headers.get(MailHeaders.BCC), instanceOf(List.class));
+			assertThat(headers.get(MailHeaders.TO).toString(), equalTo("[Foo <foo@bar>]"));
+			assertThat(headers.get(MailHeaders.CC).toString(), equalTo("[]"));
+			assertThat(headers.get(MailHeaders.BCC).toString(), equalTo("[]"));
 		}
 
 	}
