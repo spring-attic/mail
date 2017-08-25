@@ -3,6 +3,19 @@
 
 A source module that listens for Emails and emits the message body as a message payload.
 
+== Input
+
+N/A
+
+== Output
+
+=== Headers
+
+* `content-type: application/x-java-object`
+
+=== Payload
+
+* `MimeMessage`
 
 == Options
 
@@ -31,4 +44,18 @@ $$trigger.time-unit$$:: $$The TimeUnit to apply to delay values.$$ *($$TimeUnit$
 == Build
 
 ```
-$> mvn package
+$ ./mvnw clean install -PgenerateApps
+$ cd apps
+```
+You can find the corresponding binder based projects here.
+You can then cd into one of the folders and build it:
+```
+$ ./mvnw clean package
+```
+
+== Examples
+
+```
+java -jar mail-source.jar --mail.javaMailProperties= --mail.url= --mail.expression= \
+    --mail.charset= --mail.userFlag=
+```
