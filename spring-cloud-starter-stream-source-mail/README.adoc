@@ -11,11 +11,11 @@ N/A
 
 === Headers
 
-* `content-type: application/x-java-object`
+* `content-type: text/plain`
 
 === Payload
 
-* `MimeMessage`
+* `String`
 
 == Options
 
