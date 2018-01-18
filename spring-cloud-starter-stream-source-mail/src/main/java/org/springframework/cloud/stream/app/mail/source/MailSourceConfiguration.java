@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 the original author or authors.
+ * Copyright 2016-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,15 +30,12 @@ import org.springframework.cloud.stream.app.trigger.TriggerPropertiesMaxMessages
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.integration.dsl.HeaderEnricherSpec;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlowBuilder;
 import org.springframework.integration.dsl.IntegrationFlows;
-import org.springframework.integration.dsl.mail.Mail;
-import org.springframework.integration.dsl.mail.MailInboundChannelAdapterSpec;
-import org.springframework.integration.dsl.support.Consumer;
-import org.springframework.integration.dsl.support.Transformers;
 import org.springframework.integration.mail.MailHeaders;
+import org.springframework.integration.mail.dsl.Mail;
+import org.springframework.integration.mail.dsl.MailInboundChannelAdapterSpec;
 import org.springframework.integration.transformer.support.AbstractHeaderValueMessageProcessor;
 import org.springframework.integration.transformer.support.HeaderValueMessageProcessor;
 import org.springframework.messaging.Message;
@@ -48,6 +45,7 @@ import org.springframework.messaging.Message;
  *
  * @author Amol
  * @author Artem Bilan
+ * @author Chris Schaefer
  */
 @EnableBinding(Source.class)
 @EnableConfigurationProperties({ MailSourceProperties.class, TriggerPropertiesMaxMessagesDefaultOne.class })
@@ -60,17 +58,12 @@ public class MailSourceConfiguration {
 	@Bean
 	public IntegrationFlow mailInboundFlow() {
 		return getFlowBuilder()
-				.transform(Transformers.fromMail(this.properties.getCharset()))
-				.enrichHeaders(new Consumer<HeaderEnricherSpec>() {
-
-					@Override
-					public void accept(HeaderEnricherSpec h) {
-						h.defaultOverwrite(true)
+				.transform(Mail.toStringTransformer(this.properties.getCharset()))
+				.enrichHeaders(h -> {
+					h.defaultOverwrite(true)
 							.header(MailHeaders.TO, arrayToListProcessor(MailHeaders.TO))
 							.header(MailHeaders.CC, arrayToListProcessor(MailHeaders.CC))
 							.header(MailHeaders.BCC, arrayToListProcessor(MailHeaders.BCC));
-					}
-
 				})
 				.channel(Source.OUTPUT)
 				.get();

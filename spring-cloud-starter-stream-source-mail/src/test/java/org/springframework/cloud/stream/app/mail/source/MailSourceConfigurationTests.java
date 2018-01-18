@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 the original author or authors.
+ * Copyright 2016-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  *
  * @author Amol
  * @author Artem Bilan
+ * @author Chris Schaefer
  */
 @RunWith(SpringRunner.class)
 @DirtiesContext
@@ -109,14 +110,14 @@ public abstract class MailSourceConfigurationTests {
 			Message<?> received = this.messageCollector.forChannel(source.output()).poll(10, TimeUnit.SECONDS);
 			assertNotNull(received);
 			assertThat(received.getPayload(), instanceOf(String.class));
-			assertEquals("foo\r\n\r\n", received.getPayload());
+			assertTrue(((String) received.getPayload()).endsWith("\r\n\r\nfoo\r\n\r\n"));
 			MessageHeaders headers = received.getHeaders();
 			assertThat(headers.get(MailHeaders.TO), instanceOf(List.class));
 			assertThat(headers.get(MailHeaders.CC), instanceOf(List.class));
 			assertThat(headers.get(MailHeaders.BCC), instanceOf(List.class));
 			assertThat(headers.get(MailHeaders.TO).toString(), equalTo("[Foo <foo@bar>]"));
-			assertThat(headers.get(MailHeaders.CC).toString(), equalTo("[]"));
-			assertThat(headers.get(MailHeaders.BCC).toString(), equalTo("[]"));
+			assertThat(headers.get(MailHeaders.CC).toString(), equalTo("[a@b, c@d]"));
+			assertThat(headers.get(MailHeaders.BCC).toString(), equalTo("[e@f, g@h]"));
 		}
 
 	}
@@ -199,7 +200,7 @@ public abstract class MailSourceConfigurationTests {
 			Message<?> received = this.messageCollector.forChannel(source.output()).poll(10, TimeUnit.SECONDS);
 			assertNotNull(received);
 			assertThat(received.getPayload(), Matchers.instanceOf(String.class));
-			assertEquals("foo\r\n\r\n", received.getPayload());
+			assertTrue(((String) received.getPayload()).endsWith("\r\n\r\nfoo\r\n\r\n"));
 		}
 
 	}
