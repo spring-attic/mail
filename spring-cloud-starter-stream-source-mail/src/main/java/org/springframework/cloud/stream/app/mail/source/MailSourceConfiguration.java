@@ -60,11 +60,11 @@ public class MailSourceConfiguration {
 		return getFlowBuilder()
 				.transform(Mail.toStringTransformer(this.properties.getCharset()))
 				.enrichHeaders(h -> {
-                    h.defaultOverwrite(true)
-                        .header(MailHeaders.TO, arrayToListProcessor(MailHeaders.TO))
-                        .header(MailHeaders.CC, arrayToListProcessor(MailHeaders.CC))
-                        .header(MailHeaders.BCC, arrayToListProcessor(MailHeaders.BCC));
-                })
+					h.defaultOverwrite(true)
+							.header(MailHeaders.TO, arrayToListProcessor(MailHeaders.TO))
+							.header(MailHeaders.CC, arrayToListProcessor(MailHeaders.CC))
+							.header(MailHeaders.BCC, arrayToListProcessor(MailHeaders.BCC));
+				})
 				.channel(Source.OUTPUT)
 				.get();
 	}
