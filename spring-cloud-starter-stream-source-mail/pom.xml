@@ -65,9 +65,6 @@
 					<generatedApps>
 						<mail-source/>
 					</generatedApps>
-					<additionalAppProperties>
-						<additionalAppProperty>spring.cloud.stream.bindings.output.contentType=text/plain</additionalAppProperty>
-					</additionalAppProperties>
 				</configuration>
 			</plugin>
 		</plugins>
