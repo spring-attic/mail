@@ -65,6 +65,7 @@
 					<generatedApps>
 						<mail-source/>
 					</generatedApps>
+					<enableContainerImageMetadata>true</enableContainerImageMetadata>
 				</configuration>
 			</plugin>
 		</plugins>
